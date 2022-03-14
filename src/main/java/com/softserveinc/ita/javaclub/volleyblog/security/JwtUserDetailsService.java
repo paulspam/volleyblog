@@ -1,6 +1,7 @@
 package com.softserveinc.ita.javaclub.volleyblog.security;
 
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
+import com.softserveinc.ita.javaclub.volleyblog.repository.UserRepository;
 import com.softserveinc.ita.javaclub.volleyblog.security.jwt.JwtUser;
 import com.softserveinc.ita.javaclub.volleyblog.security.jwt.JwtUserFactory;
 import com.softserveinc.ita.javaclub.volleyblog.service.UserService;
@@ -18,22 +19,23 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  */
 
-@Service
+@Service("jwtUserDetailsService")
 @Slf4j
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public JwtUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public JwtUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUserName(username);
+        User user = userRepository.findByUserName(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User with usernamr: " + username + " not found");
+            log.info("IN loadUserByUserName - user with username: {} not found", username);
+            throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
         JwtUser jwtUser = JwtUserFactory.create(user);
         log.info("IN loadUserByUserName - user with username: {} successfully loaded", username);
