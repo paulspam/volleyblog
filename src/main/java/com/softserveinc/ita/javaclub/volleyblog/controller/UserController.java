@@ -30,7 +30,8 @@ public class UserController {
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);
-        } else return ResponseEntity.ok(user);
+        } else{ return ResponseEntity.ok(user);}
+
     }
 
     @PostMapping()
