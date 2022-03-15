@@ -25,6 +25,30 @@ CREATE TABLE roles
     role_name VARCHAR(20)
 );
 
+create table permissions
+(
+    id   serial
+        constraint permissions_pk
+            primary key,
+    name varchar(30) not null
+);
+
+create unique index permissions_name_uindex
+    on permissions (name);
+
+create table role_permissions
+(
+    role_id       int not null
+        constraint role_fk
+            references roles,
+    permission_id int not null
+        constraint permissions_fk
+            references permissions,
+    constraint role_permissions_pk
+        primary key (role_id, permission_id)
+);
+
+
 CREATE TABLE users
 (
     user_id    SERIAL PRIMARY KEY,

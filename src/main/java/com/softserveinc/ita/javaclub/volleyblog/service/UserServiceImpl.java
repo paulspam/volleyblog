@@ -1,6 +1,5 @@
 package com.softserveinc.ita.javaclub.volleyblog.service;
 
-import com.softserveinc.ita.javaclub.volleyblog.model.Role;
 import com.softserveinc.ita.javaclub.volleyblog.model.Status;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.repository.RoleRepository;
@@ -46,8 +45,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public User saveUser(User user) {
-        Role roleUser = roleRepository.findByRoleName("ROLE_USER");
-        user.setRole(roleUser);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Status.ACTIVE);
         User savedUser = userRepository.save(user);

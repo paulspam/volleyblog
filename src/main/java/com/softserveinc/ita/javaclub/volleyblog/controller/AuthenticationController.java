@@ -31,16 +31,16 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = "/api/v1/auth")
-public class AuthenticationRestControllerV1 {
+@RequestMapping(value = "/auth")
+public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
     @Autowired
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager,
-                                          JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthenticationController(AuthenticationManager authenticationManager,
+                                    JwtTokenProvider jwtTokenProvider, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
@@ -63,8 +63,8 @@ public class AuthenticationRestControllerV1 {
             response.put("token", token);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid username/password combination", HttpStatus.FORBIDDEN);
-//            throw new BadCredentialsException("Invalid username or password");
+//            return new ResponseEntity<>("Invalid username/password combination", HttpStatus.FORBIDDEN);
+            throw new BadCredentialsException("Invalid username or password");
         }
     }
 
