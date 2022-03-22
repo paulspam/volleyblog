@@ -18,5 +18,6 @@ public interface AmpluaService {
     @PreAuthorize(MANAGE_AMPLUA)
     Amplua update(Amplua amplua);
 
+    @PreAuthorize(MANAGE_AMPLUA)
     void deleteById(int id);
 }

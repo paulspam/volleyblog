@@ -16,6 +16,6 @@ public class PostCategory {
     @Column(name = "category_id")
     private Integer categoryId;
 
-    @Column(name = "category_name")
+    @Column(name = "category_name", unique = true)
     private String categoryName;
 }
