@@ -1,7 +1,9 @@
 package com.softserveinc.ita.javaclub.volleyblog.controller;
 
+import com.softserveinc.ita.javaclub.volleyblog.dto.PostDto;
 import com.softserveinc.ita.javaclub.volleyblog.model.Post;
-import com.softserveinc.ita.javaclub.volleyblog.service.PostService;
+import com.softserveinc.ita.javaclub.volleyblog.service.CommentServiceImpl;
+import com.softserveinc.ita.javaclub.volleyblog.service.PostServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +15,12 @@ import java.util.List;
 @RequestMapping("/posts")
 public class PostController {
 
-    private final PostService postService;
+    private final PostServiceImpl postService;
+//    private final CommentServiceImpl commentService;
 
-    public PostController(PostService postService) {
+    public PostController(PostServiceImpl postService, CommentServiceImpl commentService) {
         this.postService = postService;
+//        this.commentService = commentService;
     }
 
     @GetMapping()
@@ -38,7 +42,7 @@ public class PostController {
         if ((post.getPostId() != null) && (post.getPostId() !=0)) {
             return new ResponseEntity("Redundant parameter: postId must be null", HttpStatus.NOT_ACCEPTABLE);
         }
-        Post newPost = postService.savePost(post);
+        Post newPost = postService.save(post);
         return ResponseEntity.ok(newPost);
     }
 
@@ -47,7 +51,7 @@ public class PostController {
         if ((post.getPostId() == null) || (post.getPostId() ==0)) {
             return new ResponseEntity("Missing parameter: postId must be not null", HttpStatus.NOT_ACCEPTABLE);
         }
-        Post newPost = postService.savePost(post);
+        Post newPost = postService.update(post);
         return ResponseEntity.ok(newPost);
     }
 
@@ -60,6 +64,14 @@ public class PostController {
             postService.deleteById(id);
             return ResponseEntity.ok("Post with ID = " + id + " was deleted");
         }
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<PostDto> getPostWithComments(@PathVariable int id) {
+        PostDto postDto = postService.getPostWithComments(id);
+        if (postDto == null) {
+            return new ResponseEntity("No post with postId = " + id, HttpStatus.NOT_ACCEPTABLE);
+        } else return ResponseEntity.ok(postDto);
     }
 /*
     @GetMapping("/author/{authorId}")

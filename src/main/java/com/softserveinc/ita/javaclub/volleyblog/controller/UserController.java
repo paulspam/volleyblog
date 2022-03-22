@@ -4,6 +4,8 @@ import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,24 +38,42 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<User> saveNewUser(@RequestBody User user) {
-        if ((user.getUserId() != null) && (user.getUserId() !=0)) {
+        if ((user.getUserId() != null) && (user.getUserId() != 0)) {
             return new ResponseEntity("Redundant parameter: userId must be null", HttpStatus.NOT_ACCEPTABLE);
         }
-        User newUser = userService.saveUser(user);
-        return ResponseEntity.ok(newUser);
+
+        User newUser = userService.save(user);
+        if (newUser != null) {
+            return ResponseEntity.ok(newUser);
+        } else {
+            return new ResponseEntity("User not saved", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     @PutMapping()
+    @PreAuthorize("#user.userName == authentication.name")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         if ((user.getUserId() == null) || (user.getUserId() ==0)) {
             return new ResponseEntity("Missing parameter: userId must be not null", HttpStatus.NOT_ACCEPTABLE);
         }
-        User newUser = userService.saveUser(user);
-        return ResponseEntity.ok(newUser);
+        User updatedUser = null;
+        try {
+            updatedUser = userService.update(user);
+        } catch (AccessDeniedException e) {
+            return new ResponseEntity("Access denied!", HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return new ResponseEntity("User not updated", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable int id) {
+    public ResponseEntity<String> deleteById(@PathVariable int id) {
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);

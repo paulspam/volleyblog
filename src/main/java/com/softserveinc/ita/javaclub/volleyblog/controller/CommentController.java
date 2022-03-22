@@ -2,8 +2,6 @@ package com.softserveinc.ita.javaclub.volleyblog.controller;
 
 import com.softserveinc.ita.javaclub.volleyblog.model.Comment;
 import com.softserveinc.ita.javaclub.volleyblog.service.CommentService;
-import com.softserveinc.ita.javaclub.volleyblog.service.CommentServiceImpl;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +22,7 @@ public class CommentController {
 
     @GetMapping()
     public ResponseEntity<List<Comment>> findAll() {
-        List<Comment> allComments = commentService.getAllComments();
+        List<Comment> allComments = commentService.findAll();
         return ResponseEntity.ok(allComments);
     }
 
@@ -41,7 +39,7 @@ public class CommentController {
         if ((comment.getCommentId() != null) && (comment.getCommentId() !=0)) {
             return new ResponseEntity("Redundant parameter: commentId must be null", HttpStatus.NOT_ACCEPTABLE);
         }
-        Comment newComment = commentService.saveComment(comment);
+        Comment newComment = commentService.save(comment);
         return ResponseEntity.ok(newComment);
     }
 
@@ -50,7 +48,7 @@ public class CommentController {
         if ((comment.getCommentId() == null) || (comment.getCommentId() ==0)) {
             return new ResponseEntity("Missing parameter: commentId must be not null", HttpStatus.NOT_ACCEPTABLE);
         }
-        Comment newComment = commentService.saveComment(comment);
+        Comment newComment = commentService.save(comment);
         return ResponseEntity.ok(newComment);
     }
 

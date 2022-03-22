@@ -8,7 +8,9 @@ DROP TABLE IF EXISTS players;
 DROP TABLE IF EXISTS amplua;
 DROP TABLE IF EXISTS teams;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS role_permissions;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS permissions;
 DROP TABLE IF EXISTS humans;
 
 CREATE TABLE humans
@@ -60,12 +62,19 @@ CREATE TABLE users
     enabled    SMALLINT,
     FOREIGN KEY (role_id) REFERENCES roles (role_id)
 );
+create unique index users_username_uindex
+    on users (username);
+create unique index users_email_uindex
+    on users (email);
+
 
 CREATE TABLE amplua
 (
     amplua_id   SERIAL PRIMARY KEY,
     amplua_name VARCHAR(30)
 );
+create unique index amplua_amplua_name_uindex
+    on amplua (amplua_name);
 
 CREATE TABLE teams
 (

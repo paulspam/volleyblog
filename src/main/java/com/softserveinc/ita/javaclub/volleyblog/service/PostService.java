@@ -1,40 +1,30 @@
 package com.softserveinc.ita.javaclub.volleyblog.service;
 
+import com.softserveinc.ita.javaclub.volleyblog.dto.PostDto;
 import com.softserveinc.ita.javaclub.volleyblog.model.Post;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
-import com.softserveinc.ita.javaclub.volleyblog.repository.PostRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-@Service
-public class PostService {
-    private final PostRepository postRepository;
+import static com.softserveinc.ita.javaclub.volleyblog.security.constants.Permissions.MANAGE_POSTS;
 
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+public interface PostService {
 
-    public Post findById(Integer id) {
-        return postRepository.findById(id).orElse(null);
-    }
+    Post findById(Integer id);
 
-    public List<Post> findAll() {
-        return postRepository.findAll();
-    }
+    List<Post> findAll();
 
-    public Post savePost(Post post) {
-        return postRepository.save(post);
-    }
+    @PreAuthorize(MANAGE_POSTS)
+    Post save(Post post);
 
-    public void deleteById(Integer id) {
-        postRepository.deleteById(id);
-    }
+    @PreAuthorize("#post.user.userName == authentication.name")
+    Post update(Post post);
 
-    public List<Post> findAllByUser(User user) {
-        List<Post> allByUser = postRepository.findAllByUser(user);
-        return allByUser;
-    }
+    @PreAuthorize(MANAGE_POSTS)
+    void deleteById(Integer id);
 
+    List<Post> findAllByUser(User user);
 
+    PostDto getPostWithComments(Integer postId);
 }

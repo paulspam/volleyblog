@@ -4,8 +4,8 @@ import com.softserveinc.ita.javaclub.volleyblog.model.Status;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of Factory Method for class {@link JwtUser}.
@@ -29,7 +29,10 @@ public final class JwtUserFactory {
                 user.getEmail(),
                 user.getStatus().equals(Status.ACTIVE),
                 new Date(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName()))
+                user.getRole().getPermissions().stream()
+                        .map(p -> new SimpleGrantedAuthority(p.getName()))
+                        .collect(Collectors.toList())
+//                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName()))
         );
     }
 }

@@ -16,6 +16,6 @@ public class Amplua {
     @Column(name = "amplua_id")
     private Integer ampluaId;
 
-    @Column(name = "amplua_name")
+    @Column(name = "amplua_name", unique = true)
     private String ampluaName;
 }

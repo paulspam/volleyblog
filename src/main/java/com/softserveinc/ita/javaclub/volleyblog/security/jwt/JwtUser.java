@@ -24,6 +24,7 @@ public class JwtUser implements UserDetails {
     private final boolean enabled;
     private final Date lastPasswordResetDate;
     private final Collection<? extends GrantedAuthority> authorities;
+//    private final Collection<?> userPermissions;
 
     public JwtUser(
             Integer userId,
@@ -35,6 +36,7 @@ public class JwtUser implements UserDetails {
             boolean enabled,
             Date lastPasswordResetDate,
             Collection<? extends GrantedAuthority> authorities
+//            Collection<?> userPermissions
     ) {
         this.userId = userId;
         this.userName = userName;
@@ -48,6 +50,10 @@ public class JwtUser implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+//        Set<GrantedAuthority> authorities;
+//        authorities = userPermissions.stream()
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toSet());
         return authorities;
     }
 

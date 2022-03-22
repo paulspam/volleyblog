@@ -20,3 +20,73 @@ VALUES
        ('ADMIN'),
        ('USER'),
        ('MODERATOR');
+
+INSERT INTO permissions (name)
+VALUES
+('READ_AMPLUA'),
+('MANAGE_AMPLUA'),
+('READ_COMMENT'),
+('MANAGE_COMMENTS'),
+('READ_LIKE'),
+('MANAGE_LIKES'),
+('READ_PERMITION'),
+('MANAGE_PERMITIONS'),
+('READ_PLAYER'),
+('MANAGE_PLAYERS'),
+('READ_POST'),
+('MANAGE_POSTS'),
+('READ_POST_CATEGORY'),
+('MANAGE_POST_CATEGORIES'),
+('READ_POST_STATUS'),
+('MANAGE_POST_STATUSES'),
+('READ_ROLE'),
+('MANAGE_ROLES'),
+('READ_TAG'),
+('MANAGE_TAGS'),
+('READ_TEAM'),
+('MANAGE_TEAMS'),
+('READ_USER'),
+('MANAGE_USERS');
+
+-- ADMIN Permissions
+INSERT INTO role_permissions (role_id, permission_id)
+VALUES
+(1, 2),
+(1, 4),
+(1, 6),
+(1, 8),
+(1, 10),
+(1, 12),
+(1, 14),
+(1, 16),
+(1, 18),
+(1, 20),
+(1, 22),
+(1, 24);
+
+-- USER Permissions
+INSERT INTO role_permissions (role_id, permission_id)
+VALUES
+(2, 1),
+(2, 4),
+(2, 6),
+(2, 7),
+(2, 10),
+(2, 12),
+(2, 13),
+(2, 15),
+(2, 17),
+(2, 20),
+(2, 22),
+(2, 24);
+
+INSERT INTO amplua (amplua_name)
+VALUES
+('связующий'),
+('диагональный'),
+('центральный блокирующий'),
+('доигровщик'),
+('либеро');
+
+
+

@@ -5,15 +5,23 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
+import static com.softserveinc.ita.javaclub.volleyblog.security.constants.Permissions.MANAGE_USERS;
+
 public interface UserService {
 
     User findById(Integer id);
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize(MANAGE_USERS)
     List<User> findAll();
 
-    User saveUser(User user);
+    @PreAuthorize(MANAGE_USERS)
+    User save(User user);
 
+//    @PreAuthorize("#user.userName == authentication.name")
+    User update(User user);
+
+    @PreAuthorize(MANAGE_USERS)
     void deleteById(Integer id);
 
     User findByUserName(String name);
@@ -21,4 +29,6 @@ public interface UserService {
     List<User> findAllByFirstName(String name);
 
     List<User> findAllByLastName(String lastName);
+
+    User findByEmail(String email);
 }
