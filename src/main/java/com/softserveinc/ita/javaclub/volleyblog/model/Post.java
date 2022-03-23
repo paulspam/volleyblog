@@ -40,12 +40,19 @@ public class Post {
 ////    @JoinColumn(name = "post_id")
 //    private List<Comment> comments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_category_id")
     private PostCategory postCategory;
 
     @ManyToOne
     @JoinColumn(name = "post_status_id")
     private PostStatus postStatus;
+
+    @ManyToMany()
+//    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<Tag> tags;
 
 }

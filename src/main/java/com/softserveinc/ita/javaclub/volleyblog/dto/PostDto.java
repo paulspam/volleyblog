@@ -1,10 +1,7 @@
 package com.softserveinc.ita.javaclub.volleyblog.dto;
 
 
-import com.softserveinc.ita.javaclub.volleyblog.model.Comment;
-import com.softserveinc.ita.javaclub.volleyblog.model.PostCategory;
-import com.softserveinc.ita.javaclub.volleyblog.model.PostStatus;
-import com.softserveinc.ita.javaclub.volleyblog.model.User;
+import com.softserveinc.ita.javaclub.volleyblog.model.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,4 +29,6 @@ public class PostDto {
     private PostCategory postCategory;
 
     private PostStatus postStatus;
+
+    private List<Tag> tags;
 }

@@ -1,5 +1,6 @@
 package com.softserveinc.ita.javaclub.volleyblog.controller;
 
+import com.softserveinc.ita.javaclub.volleyblog.model.Post;
 import com.softserveinc.ita.javaclub.volleyblog.model.PostCategory;
 import com.softserveinc.ita.javaclub.volleyblog.service.PostCategoryService;
 import org.springframework.http.HttpStatus;
@@ -91,5 +92,11 @@ public class PostCategoryController {
             }
             return ResponseEntity.ok("IN PostCategoryController.deleteById - PostCategory with ID = " + id + " was deleted");
         }
+    }
+
+    @GetMapping("/{id}/posts")
+    public ResponseEntity<List<Post>> findAllPostsByPostCategory(@PathVariable int id) {
+        List<Post> allPostByPostCategory = postCategoryService.findAllPostsByPostCategory(id);
+        return ResponseEntity.ok(allPostByPostCategory);
     }
 }

@@ -1,5 +1,6 @@
 package com.softserveinc.ita.javaclub.volleyblog.service;
 
+import com.softserveinc.ita.javaclub.volleyblog.model.Post;
 import com.softserveinc.ita.javaclub.volleyblog.model.PostCategory;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -20,4 +21,6 @@ public interface PostCategoryService {
 
     @PreAuthorize(MANAGE_POST_CATEGORIES)
     void deleteById(int id);
+
+    List<Post> findAllPostsByPostCategory(int id);
 }

@@ -151,3 +151,27 @@ CREATE TABLE comment_likes
     like_value SMALLINT,
     FOREIGN KEY (comment_id) REFERENCES comments (comment_id)
 );
+
+create table tags
+(
+    id   serial
+        constraint tags_pk
+            primary key,
+    name VARCHAR(20)
+);
+
+create unique index tags_name_uindex
+    on tags (name);
+
+
+create table post_tags
+(
+    post_id int
+        constraint post_tags_posts_post_id_fk
+            references posts,
+    tag_id  int
+        constraint post_tags_tags_id_fk
+            references tags,
+    constraint post_tags_pk
+        primary key (post_id, tag_id)
+);
