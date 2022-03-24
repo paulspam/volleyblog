@@ -4,7 +4,6 @@ import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +55,9 @@ public class UserController {
         if ((user.getUserId() == null) || (user.getUserId() ==0)) {
             return new ResponseEntity("Missing parameter: userId must be not null", HttpStatus.NOT_ACCEPTABLE);
         }
+        User updatedUser = userService.update(user);
+
+        /*
         User updatedUser = null;
         try {
             updatedUser = userService.update(user);
@@ -64,12 +66,17 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
+        return ResponseEntity.ok(updatedUser);
+
+/*
 
         if (updatedUser != null) {
             return ResponseEntity.ok(updatedUser);
         } else {
             return new ResponseEntity("User not updated", HttpStatus.UNPROCESSABLE_ENTITY);
         }
+*/
     }
 
     @DeleteMapping("/{id}")

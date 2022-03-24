@@ -17,7 +17,7 @@ public class AmpluaServiceImpl implements AmpluaService {
     public List<Amplua> findAll;
 
     @Override
-    public List<Amplua> findAll() {
+    public List<Amplua> getAllAmplua() {
         return ampluaRepository.findAll();
     }
 
@@ -28,11 +28,6 @@ public class AmpluaServiceImpl implements AmpluaService {
 
     @Override
     public Amplua save(Amplua amplua) {
-        return ampluaRepository.save(amplua);
-    }
-
-    @Override
-    public Amplua update(Amplua amplua) {
         return ampluaRepository.save(amplua);
     }
 

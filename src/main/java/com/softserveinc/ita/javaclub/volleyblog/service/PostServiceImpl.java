@@ -3,11 +3,9 @@ package com.softserveinc.ita.javaclub.volleyblog.service;
 import com.softserveinc.ita.javaclub.volleyblog.dto.PostDto;
 import com.softserveinc.ita.javaclub.volleyblog.model.Comment;
 import com.softserveinc.ita.javaclub.volleyblog.model.Post;
-import com.softserveinc.ita.javaclub.volleyblog.model.Tag;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.repository.CommentRepository;
 import com.softserveinc.ita.javaclub.volleyblog.repository.PostRepository;
-import com.softserveinc.ita.javaclub.volleyblog.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +19,10 @@ public class PostServiceImpl implements PostService {
 
     private final MappingUtils mappingUtils;
 
-    private final TagRepository tagRepository;
-
-    public PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, MappingUtils mappingUtils, TagRepository tagRepository) {
+    public PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, MappingUtils mappingUtils) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.mappingUtils = mappingUtils;
-        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -63,12 +58,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostWithComments(Integer postId) {
+        PostDto postDto = new PostDto();
         Post post = findById(postId);
-        List<Comment> comments = commentRepository.findAllByPost(post);
-        List<Tag> tags = tagRepository.findAllByPosts(post);
-        PostDto postDto = mappingUtils.mapToPostDto(post);
-        postDto.setComments(comments);
-        postDto.setTags(tags);
+        List<Comment> commets = commentRepository.findAllByPost(post);
+        postDto = mappingUtils.mapToPostDto(post);
+        postDto.setComments(commets);
 
         return  postDto;
     }

@@ -16,7 +16,6 @@ public class MappingUtils {
         postDto.setUser(post.getUser());
         postDto.setPostCategory(post.getPostCategory());
         postDto.setPostStatus(post.getPostStatus());
-        postDto.setTags(post.getTags());
 
         return postDto;
     }

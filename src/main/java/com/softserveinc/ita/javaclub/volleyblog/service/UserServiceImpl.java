@@ -78,15 +78,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+/*
+
         User updatedUser = null;
         try {
             updatedUser = userRepository.save(user);
             log.info("IN UserServiceImpl.update - user: {} successfully updated", updatedUser.getUserName());
-        /*
+        */
+/*
         } catch (AccessDeniedException e) {
             log.info("IN UserServiceImpl.save - for user: {} catch AccessDeniedException", updatedUser.getUserName());
             return null;
-        */
+        *//*
+
         } catch (DataIntegrityViolationException e) {
             log.info("IN UserServiceImpl.save - for user: {} catch DataIntegrityViolationException", user.getUserName());
             return null;
@@ -94,6 +99,10 @@ public class UserServiceImpl implements UserService {
             log.info("IN UserServiceImpl.save - for user: {} catch Exception", user.getUserName());
             return null;
         }
+
+*/
+        User updatedUser = userRepository.save(user);
+        log.info("IN UserServiceImpl.update - user: {} successfully updated", updatedUser.getUserName());
 
         return updatedUser;
     }
