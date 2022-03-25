@@ -32,6 +32,11 @@ public class AmpluaServiceImpl implements AmpluaService {
     }
 
     @Override
+    public Amplua update(Amplua amplua) {
+        return ampluaRepository.save(amplua);
+    }
+
+    @Override
     public void deleteById(int id) {
         ampluaRepository.deleteById(id);
 

@@ -48,7 +48,7 @@ public class AmpluaController {
         if ((amplua.getAmpluaId() == null) || (amplua.getAmpluaId() ==0)) {
             return new ResponseEntity("Missing parameter: ampluaId must be not null", HttpStatus.NOT_ACCEPTABLE);
         }
-        Amplua newAmplua = ampluaService.save(amplua);
+        Amplua newAmplua = ampluaService.update(amplua);
         return ResponseEntity.ok(newAmplua);
     }
 

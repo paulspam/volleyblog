@@ -4,7 +4,6 @@ import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping()
-    @PreAuthorize("#user.userName == authentication.name")
+//    @PreAuthorize("#user.userName == authentication.name")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         if ((user.getUserId() == null) || (user.getUserId() ==0)) {
             return new ResponseEntity("Missing parameter: userId must be not null", HttpStatus.NOT_ACCEPTABLE);

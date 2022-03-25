@@ -18,7 +18,7 @@ public interface UserService {
     @PreAuthorize(MANAGE_USERS)
     User save(User user);
 
-//    @PreAuthorize("#user.userName == authentication.name")
+    @PreAuthorize("#user.userName == authentication.name")
     User update(User user);
 
     @PreAuthorize(MANAGE_USERS)
