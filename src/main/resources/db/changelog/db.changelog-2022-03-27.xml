@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet author="paulspam (generated)" id="1648416008480-4">
+        <addUniqueConstraint columnNames="amplua_name" constraintName="UC_AMPLUAAMPLUA_NAME_COL" tableName="amplua"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-5">
+        <addUniqueConstraint columnNames="category_name" constraintName="UC_POST_CATEGORIESCATEGORY_NAME_COL" tableName="post_categories"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-6">
+        <addUniqueConstraint columnNames="name" constraintName="UC_TAGSNAME_COL" tableName="tags"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-7">
+        <addUniqueConstraint columnNames="email" constraintName="UC_USERSEMAIL_COL" tableName="users"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-8">
+        <addUniqueConstraint columnNames="username" constraintName="UC_USERSUSERNAME_COL" tableName="users"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-9">
+        <dropForeignKeyConstraint baseTableName="players" constraintName="players_user_id_fkey"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-10">
+        <dropTable tableName="tests"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-11">
+        <dropPrimaryKey constraintName="post_tags_pk" tableName="post_tags"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-12">
+        <dropPrimaryKey constraintName="role_permissions_pk" tableName="role_permissions"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-13">
+        <dropColumn columnName="user_id" tableName="players"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-1">
+        <dropNotNullConstraint columnDataType="int" columnName="amplua_id" tableName="players"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-2">
+        <dropNotNullConstraint columnDataType="varchar(255)" columnName="name" tableName="permissions"/>
+    </changeSet>
+    <changeSet author="paulspam (generated)" id="1648416008480-3">
+        <dropNotNullConstraint columnDataType="int" columnName="team_id" tableName="players"/>
+    </changeSet>
+</databaseChangeLog>
