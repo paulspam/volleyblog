@@ -1,5 +1,6 @@
 package com.softserveinc.ita.javaclub.volleyblog.service;
 
+import com.softserveinc.ita.javaclub.volleyblog.exception.RecordNotFoundException;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -9,11 +10,11 @@ import static com.softserveinc.ita.javaclub.volleyblog.security.constants.Permis
 
 public interface UserService {
 
-    User findById(Integer id);
+    User findById(Integer id) throws RecordNotFoundException;
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN')")
 //    @PreAuthorize(MANAGE_USERS)
-    List<User> findAll();
+    List<User> findAll(Integer pageNo, Integer pageSize, String sortBy);
 
     @PreAuthorize(MANAGE_USERS)
     User save(User user);
@@ -22,13 +23,13 @@ public interface UserService {
     User update(User user);
 
     @PreAuthorize(MANAGE_USERS)
-    void deleteById(Integer id);
+    void deleteById(Integer id) throws RecordNotFoundException;
 
-    User findByUserName(String name);
+    User findByUserName(String name) throws RecordNotFoundException;
 
     List<User> findAllByFirstName(String name);
 
     List<User> findAllByLastName(String lastName);
 
-    User findByEmail(String email);
+    User findByEmail(String email) throws RecordNotFoundException;
 }

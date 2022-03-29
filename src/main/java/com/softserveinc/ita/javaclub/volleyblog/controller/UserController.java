@@ -1,5 +1,6 @@
 package com.softserveinc.ita.javaclub.volleyblog.controller;
 
+import com.softserveinc.ita.javaclub.volleyblog.exception.RecordNotFoundException;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,17 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> findAll() {
-        List<User> allUsers = userService.findAll();
-        return ResponseEntity.ok(allUsers);
+    public ResponseEntity<List<User>> findAll(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "3") Integer pageSize,
+            @RequestParam(defaultValue = "userId") String sortBy)
+    {
+        List<User> allPagedUsers = userService.findAll(pageNo, pageSize, sortBy);
+        return ResponseEntity.ok(allPagedUsers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable int id) {
+    public ResponseEntity<User> findById(@PathVariable int id) throws RecordNotFoundException {
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);
@@ -79,7 +84,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable int id) {
+    public ResponseEntity<String> deleteById(@PathVariable int id) throws RecordNotFoundException {
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);

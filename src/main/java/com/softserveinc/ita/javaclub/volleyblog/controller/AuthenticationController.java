@@ -1,11 +1,11 @@
 package com.softserveinc.ita.javaclub.volleyblog.controller;
 
 import com.softserveinc.ita.javaclub.volleyblog.dto.AuthenticationRequestDto;
+import com.softserveinc.ita.javaclub.volleyblog.exception.RecordNotFoundException;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.security.jwt.JwtTokenProvider;
 import com.softserveinc.ita.javaclub.volleyblog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -47,7 +47,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
+    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) throws RecordNotFoundException {
 
         try {
             String username = requestDto.getUsername();

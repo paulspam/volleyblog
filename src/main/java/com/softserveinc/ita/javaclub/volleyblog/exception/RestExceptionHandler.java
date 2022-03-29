@@ -194,4 +194,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), apiError.getStatus(), request);
     }
 
+    @ExceptionHandler(RecordNotFoundException.class)
+    protected ResponseEntity<Object> handleRecordNotFoundException(
+            RecordNotFoundException ex,
+            WebRequest request) {
+
+        log.info(ex.getClass().getName() + " handled");
+
+        String error = ex.getCause().toString();
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED,
+                ex.getLocalizedMessage(), error);
+
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), apiError.getStatus(), request);
+    }
+
 }

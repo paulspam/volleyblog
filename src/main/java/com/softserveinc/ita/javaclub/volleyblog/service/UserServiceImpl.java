@@ -1,15 +1,21 @@
 package com.softserveinc.ita.javaclub.volleyblog.service;
 
+import com.softserveinc.ita.javaclub.volleyblog.exception.RecordNotFoundException;
 import com.softserveinc.ita.javaclub.volleyblog.model.Status;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.repository.RoleRepository;
 import com.softserveinc.ita.javaclub.volleyblog.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,48 +36,65 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Integer id) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            log.warn("IN findById - user not found by userId {}", id);
+    public User findById(Integer id) throws RecordNotFoundException {
+//        User user = userRepository.findById(id).orElse(null);
+        Optional<User> user = userRepository.findById(id);
 
+        if (user.isPresent()) {
+            log.info("IN UserServiceImpl.findById - user {} found by userId {}", user.get().getUserName(), id);
+            return user.get();
         } else {
-            log.info("IN findById - user {} found by userId {}", user.getUserName(), id);
+            log.warn("IN UserServiceImpl.findById - user not found by userId {}", id);
+            throw new RecordNotFoundException("User not found by userId " + id);
         }
-        return user;
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> allUser = userRepository.findAll();
-        log.info("IN getAll - {} users found", allUser.size());
-        return allUser;
+    public List<User> findAll(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        Page<User> pagedResult = userRepository.findAll(paging);
+
+//        List<User> allUser = userRepository.findAll();
+
+        log.info("IN UserServiceImpl.findAll - {} users found at {} pages",
+                pagedResult.getTotalElements(), pagedResult.getTotalPages());
+
+        if (pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public User save(User user) {
-        if (userRepository.findByUserName(user.getUserName()) != null) {
-            log.info("IN UserServiceImpl.save - user with userName {} already exist", user.getUserName());
-            return null;
-        }
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            log.info("IN UserServiceImpl.save - user with email {} already exist", user.getEmail());
-            return null;
-        }
+//        if (userRepository.findByUserName(user.getUserName()) != null) {
+//            log.info("IN UserServiceImpl.save - user with userName {} already exist", user.getUserName());
+//            return null;
+//        }
+//        if (userRepository.findByEmail(user.getEmail()) != null) {
+//            log.info("IN UserServiceImpl.save - user with email {} already exist", user.getEmail());
+//            return null;
+//        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Status.ACTIVE);
-        User savedUser = null;
-        try {
-            savedUser = userRepository.save(user);
-            log.info("IN UserServiceImpl.save - user: {} successfully saved", savedUser.getUserName());
-        } catch (DataIntegrityViolationException e) {
-            log.info("IN UserServiceImpl.save - for user: {} catch DataIntegrityViolationException", savedUser.getUserName());
-            return null;
-        } catch (Exception e) {
-            log.info("IN UserServiceImpl.save - for user: {} catch Exception", savedUser.getUserName());
-            return null;
-        }
+        User savedUser = userRepository.save(user);
+//
+//        User savedUser = null;
+//        try {
+//            savedUser = userRepository.save(user);
+//            log.info("IN UserServiceImpl.save - user: {} successfully saved", savedUser.getUserName());
+//        } catch (DataIntegrityViolationException e) {
+//            log.info("IN UserServiceImpl.save - for user: {} catch DataIntegrityViolationException", savedUser.getUserName());
+//            return null;
+//        } catch (Exception e) {
+//            log.info("IN UserServiceImpl.save - for user: {} catch Exception", savedUser.getUserName());
+//            return null;
+//        }
+//
+
         return savedUser;
     }
 
@@ -108,20 +131,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        userRepository.deleteById(id);
-        log.info("IN deleteById - user with id: {} deleted", id);
+    public void deleteById(Integer id) throws RecordNotFoundException {
+
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.deleteById(id);
+            log.info("IN deleteById - user with id: {} deleted", id);
+        } else {
+            log.warn("IN UserServiceImpl.deleteById - user not found with userId {}", id);
+            throw new RecordNotFoundException("User not found with userId " + id);
+        } 
+
     }
 
     @Override
-    public User findByUserName(String name) {
-        User user = userRepository.findByUserName(name);
-        if (user != null) {
-            log.info("IN findByUserName - user {} found by username {}", user, name);
+    public User findByUserName(String name) throws RecordNotFoundException {
+        Optional<User> user = userRepository.findByUserName(name);
+//        User user = userRepository.findByUserName(name);
+        if (user.isPresent()) {
+            log.info("IN findByUserName - user  with username {} found", name);
+            return user.get();
         } else {
             log.warn("IN findByUserName - user not found by username {}", name);
+            throw new RecordNotFoundException("User not found by username " + name);
         }
-        return user;
     }
 
     @Override
@@ -136,7 +169,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) throws RecordNotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            log.info("IN findByUserName - user  with username {} found", email);
+            return user.get();
+        } else {
+            log.warn("IN findByUserName - user not found by username {}", email);
+            throw new RecordNotFoundException("User not found by username " + email);
+        }
     }
 }

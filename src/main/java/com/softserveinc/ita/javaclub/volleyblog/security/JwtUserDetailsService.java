@@ -4,7 +4,6 @@ import com.softserveinc.ita.javaclub.volleyblog.model.User;
 import com.softserveinc.ita.javaclub.volleyblog.repository.UserRepository;
 import com.softserveinc.ita.javaclub.volleyblog.security.jwt.JwtUser;
 import com.softserveinc.ita.javaclub.volleyblog.security.jwt.JwtUserFactory;
-import com.softserveinc.ita.javaclub.volleyblog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +31,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).get();
         if (user == null) {
             log.info("IN loadUserByUserName - user with username: {} not found", username);
             throw new UsernameNotFoundException("User with username: " + username + " not found");
