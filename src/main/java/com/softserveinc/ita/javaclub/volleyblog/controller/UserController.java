@@ -33,9 +33,10 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable int id) throws RecordNotFoundException {
         User user = userService.findById(id);
-        if (user == null) {
-            return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);
-        } else{ return ResponseEntity.ok(user);}
+//        if (user == null) {
+//            return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);
+//        } else{ return ResponseEntity.ok(user);}
+        return ResponseEntity.ok(user);
 
     }
 
@@ -54,33 +55,13 @@ public class UserController {
     }
 
     @PutMapping()
-//    @PreAuthorize("#user.userName == authentication.name")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         if ((user.getUserId() == null) || (user.getUserId() ==0)) {
             return new ResponseEntity("Missing parameter: userId must be not null", HttpStatus.NOT_ACCEPTABLE);
         }
         User updatedUser = userService.update(user);
 
-        /*
-        User updatedUser = null;
-        try {
-            updatedUser = userService.update(user);
-        } catch (AccessDeniedException e) {
-            return new ResponseEntity("Access denied!", HttpStatus.FORBIDDEN);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
         return ResponseEntity.ok(updatedUser);
-
-/*
-
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            return new ResponseEntity("User not updated", HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-*/
     }
 
     @DeleteMapping("/{id}")

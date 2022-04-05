@@ -20,6 +20,7 @@ public interface UserService {
     User save(User user);
 
     @PreAuthorize("#user.userName == authentication.name")
+//    @PreAuthorize("hasAuthority('#user.userName == authentication.name')")
     User update(User user);
 
     @PreAuthorize(MANAGE_USERS)
