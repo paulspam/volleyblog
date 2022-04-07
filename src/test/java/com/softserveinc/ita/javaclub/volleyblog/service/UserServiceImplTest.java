@@ -24,6 +24,7 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -37,7 +38,7 @@ class UserServiceImplTest {
     private PasswordEncoder mockPasswordEncoder;
 
     @Autowired
-//    @InjectMocks
+    @InjectMocks
     private UserServiceImpl userService;
 
     private User user1;
@@ -88,11 +89,17 @@ class UserServiceImplTest {
         assertEquals(user1, savedUser);
     }
 
-
     @Test
     void deleteByIdUserTest() throws RecordNotFoundException {
-
+        when(mockUserRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
+        doNothing().when(mockUserRepository).deleteById(isA(Integer.class));
         userService.deleteById(2);
         verify(mockUserRepository, times(1)).deleteById(2);
+    }
+
+    @Test
+    void deleteByIdThrowsExceptionTest() throws RecordNotFoundException {
+        when(mockUserRepository.findById(any())).thenReturn(Optional.empty());
+        assertThrows(RecordNotFoundException.class, () -> userService.deleteById(5));
     }
 }
