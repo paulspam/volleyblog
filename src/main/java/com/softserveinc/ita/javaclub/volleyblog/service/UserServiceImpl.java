@@ -55,10 +55,9 @@ public class UserServiceImpl implements UserService {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<User> pagedResult = userRepository.findAll(paging);
 
-        log.info("IN UserServiceImpl.findAll - {} users found at {} pages",
-                pagedResult.getTotalElements(), pagedResult.getTotalPages());
-
         if (pagedResult.hasContent()) {
+            log.info("IN UserServiceImpl.findAll - {} users found at {} pages",
+                    pagedResult.getTotalElements(), pagedResult.getTotalPages());
             return pagedResult.getContent();
         } else {
             return new ArrayList<>();
