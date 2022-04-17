@@ -155,15 +155,12 @@
 		<!-- From A Guide to REST-assured-->
 		<!-- https://www.baeldung.com/rest-assured-tutorial-->
 
-<!--
 
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
-			<version>5.0.1</version>
 			<scope>test</scope>
 		</dependency>
--->
 
 	</dependencies>
 
