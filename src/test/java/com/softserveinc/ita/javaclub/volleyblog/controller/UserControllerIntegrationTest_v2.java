@@ -18,6 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ import static org.hamcrest.CoreMatchers.is;
 //@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class UserControllerIntegrationTest_v2 {
 
     @Autowired
@@ -55,7 +57,6 @@ public class UserControllerIntegrationTest_v2 {
     @WithMockUser(username = "admin", password = "admin11")
     public void findByIdIT() throws Exception {
         Integer userIdToTest = 1;
-
         User userToTest = userRepository.findById(userIdToTest).orElseThrow();
         mockMvc.perform(get("/users/" + userIdToTest)
 //                .with(user())
@@ -76,7 +77,6 @@ public class UserControllerIntegrationTest_v2 {
     public void findByIdThrowsExceptionIT() throws Exception {
         mockMvc.perform(get("/users/222").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
-
     }
 
 
@@ -95,37 +95,110 @@ public class UserControllerIntegrationTest_v2 {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+    @WithMockUser(authorities = "MANAGE_USERS")
+//    @Transactional
     public void saveNewUserIT() throws Exception {
-        User newUser = new User(null, "paul777", "Paul777", "Musienko777", "paul7777@ukr.net", "psw", Status.ACTIVE, new Role(2, "ROLE_USER", List.of(new Permission(), new Permission())));
+        User testUser = new User(null,
+                "paul77Save",
+                "Paul77Save",
+                "Musienko77Save",
+                "paul77save@ukr.net",
+                "psw",
+                Status.ACTIVE,
+                roleRepository.findByRoleName("ROLE_USER"));
+
         mockMvc.perform(post("/users")
 //                        .with(user("admin"))
 //                        .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8")
 //                        .content(asJsonString(newUser)))
-                        .content(mapper.writeValueAsString(newUser)))
-                .andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(testUser)))
+                .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.userName", is("paul777")));
-
+                .andExpect(jsonPath("$.userName", is(testUser.getUserName())))
+                .andExpect(jsonPath("$.email", is(testUser.getEmail())));
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
-    public void updateUserIT() throws Exception {
-        User newUser = new User(5, "paul5", "Paul55", "Musienko5", "paul775@ukr.net", "psw", Status.ACTIVE, new Role(2, "ROLE_USER", List.of(new Permission(), new Permission())));
-        mockMvc.perform(put("/users")
+    @WithMockUser(authorities = "MANAGE_USERS")
+//    @Transactional
+    public void saveNewUserWithExistingUserIdIT() throws Exception {
+        User testUser = new User(77,
+                "paul77Save",
+                "Paul77Save",
+                "Musienko77Save",
+                "paul77save@ukr.net",
+                "psw",
+                Status.ACTIVE,
+                roleRepository.findByRoleName("ROLE_USER"));
+
+        mockMvc.perform(post("/users")
 //                        .with(user("admin"))
 //                        .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8")
-                        .content(mapper.writeValueAsString(newUser)))
-                .andExpect(status().isCreated())
+//                        .content(asJsonString(newUser)))
+                        .content(mapper.writeValueAsString(testUser)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN));
+//                .andExpect(jsonPath("$.userName", is(testUser.getUserName())))
+//                .andExpect(jsonPath("$.email", is(testUser.getEmail())));
+    }
+
+    @Test
+    @WithMockUser(username = "paul77Updated")
+//    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+//    @WithMockUser(authorities = "MANAGE_USERS")
+    public void updateUserIT() throws Exception {
+        User testUser = new User(null,
+                "paul77Update",
+                "Paul77Update",
+                "Musienko77Update",
+                "paul77update@ukr.net",
+                "psw",
+                Status.ACTIVE,
+                roleRepository.findByRoleName("ROLE_USER"));
+        testUser = userRepository.save(testUser);
+        testUser.setUserName("paul77Updated");
+        testUser.setFirstName("Paul77Updated");
+        testUser.setEmail("paul77updated@ukr.net");
+
+        mockMvc.perform(put("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(mapper.writeValueAsString(testUser)))
+                .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.userName", is("paul5")))
-                .andExpect(jsonPath("$.firstName", is("Paul55")))
-                .andExpect(jsonPath("$.email", is("paul775@ukr.net")));
+                .andExpect(jsonPath("$.userName", is(testUser.getUserName())))
+                .andExpect(jsonPath("$.firstName", is(testUser.getFirstName())))
+                .andExpect(jsonPath("$.email", is(testUser.getEmail())));
+    }
+
+
+    @Test
+    @WithMockUser(username = "paul77Update")
+//    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+//    @WithMockUser(authorities = "MANAGE_USERS")
+    public void updateUserWithoutUserIdIT() throws Exception {
+        User testUser = new User(null,
+                "paul77Update",
+                "Paul77Update",
+                "Musienko77Update",
+                "paul77update@ukr.net",
+                "psw",
+                Status.ACTIVE,
+                roleRepository.findByRoleName("ROLE_USER"));
+//        testUser = userRepository.save(testUser);
+//        testUser.setUserName("paul77Updated");
+//        testUser.setFirstName("Paul77Updated");
+//        testUser.setEmail("paul77updated@ukr.net");
+
+        mockMvc.perform(put("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(mapper.writeValueAsString(testUser)))
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
@@ -134,10 +207,10 @@ public class UserControllerIntegrationTest_v2 {
     public void deleteByIdIT() throws Exception {
 
         User testUser = new User(null,
-                "paul777",
-                "Paul777",
-                "Musienko777",
-                "paul777@ukr.net",
+                "paul77Delete",
+                "Paul77Delete",
+                "Musienko77Delete",
+                "paul77delete@ukr.net",
                 "psw",
                 Status.ACTIVE,
                 roleRepository.findByRoleName("ROLE_USER"));
@@ -147,7 +220,7 @@ public class UserControllerIntegrationTest_v2 {
 
         mockMvc.perform(delete("/users/" + userIdToTest)
 //                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
 //                .with(csrf().asHeader()))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -156,6 +229,7 @@ public class UserControllerIntegrationTest_v2 {
 
     @Test
     @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+    @Disabled
     public void deleteByIdThrowsExceptionIT() throws Exception {
         mockMvc.perform(delete("/users/555"))
                 /*.andDo(print())*/
@@ -176,24 +250,19 @@ public class UserControllerIntegrationTest_v2 {
         mockMvc.perform(get("/users/firstname/Paul").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].firstName", is("paul")));
+                .andExpect(jsonPath("$[0].firstName", is("Paul")));
 
     }
 
     @Test
     @WithMockUser(username = "admin", password = "admin")
     public void findAllByLastNameIT() throws Exception {
-        mockMvc.perform(get("/users/lastname/Musiewnko").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/lastname/Musienko").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].lastName", is("Musienko")));
 
     }
-
-
-
-
-
 
 
 }
