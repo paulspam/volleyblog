@@ -4,6 +4,8 @@ import com.softserveinc.ita.javaclub.volleyblog.model.Permission;
 import com.softserveinc.ita.javaclub.volleyblog.model.Role;
 import com.softserveinc.ita.javaclub.volleyblog.model.Status;
 import com.softserveinc.ita.javaclub.volleyblog.model.User;
+import com.softserveinc.ita.javaclub.volleyblog.repository.RoleRepository;
+import com.softserveinc.ita.javaclub.volleyblog.repository.UserRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -19,9 +21,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -39,22 +43,29 @@ public class UserControllerIntegrationTest_v2 {
     @Autowired
     private UserController userController;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     private static ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    @WithMockUser(username = "admin", password = "admin")
+    @WithMockUser(username = "admin", password = "admin11")
     public void findByIdIT() throws Exception {
-        String paramUserId = "1";
-        User expectedUser = new User(1, "paul", "Paul", "Musienko", "paul77@ukr.net", "psw", Status.ACTIVE, new Role(2, "ROLE_USER", List.of(new Permission(), new Permission())));
-        mockMvc.perform(get("/users/2")
+        Integer userIdToTest = 1;
+
+        User userToTest = userRepository.findById(userIdToTest).orElseThrow();
+        mockMvc.perform(get("/users/" + userIdToTest)
 //                .with(user())
 //                .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.userName", is("paul")));
+                .andExpect(jsonPath("$.userName", is(userToTest.getUserName())))
+                .andExpect(jsonPath("$.email", is(userToTest.getEmail())));
 //                .andExpect(jsonPath("$[0].userName", is("paul")));
 
     }
@@ -75,10 +86,11 @@ public class UserControllerIntegrationTest_v2 {
         mockMvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[1].userName", is("paul")))
-                .andExpect(jsonPath("$[1].email", is("paul77@ukr.net")))
-                .andExpect(jsonPath("$[2].userName", is("paul33")))
-                .andExpect(jsonPath("$[2].email", is("paul773@ukr.net")));
+                .andExpect(jsonPath("$", Matchers.hasSize(3)));
+//                .andExpect(jsonPath("$[1].userName", is("paul")))
+//                .andExpect(jsonPath("$[1].email", is("paul77@ukr.net")))
+//                .andExpect(jsonPath("$[2].userName", is("paul33")))
+//                .andExpect(jsonPath("$[2].email", is("paul773@ukr.net")));
 
     }
 
@@ -117,11 +129,29 @@ public class UserControllerIntegrationTest_v2 {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+//    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+    @WithMockUser(authorities = "MANAGE_USERS")
     public void deleteByIdIT() throws Exception {
-        mockMvc.perform(delete("/users/5"))
-                /*.andDo(print())*/
+
+        User testUser = new User(null,
+                "paul777",
+                "Paul777",
+                "Musienko777",
+                "paul777@ukr.net",
+                "psw",
+                Status.ACTIVE,
+                roleRepository.findByRoleName("ROLE_USER"));
+
+        testUser = userRepository.save(testUser);
+        Integer userIdToTest = testUser.getUserId();
+
+        mockMvc.perform(delete("/users/" + userIdToTest)
+//                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+//                .with(csrf().asHeader()))
+                .andDo(print())
                 .andExpect(status().isOk());
+        assertNull(userRepository.findById(userIdToTest).orElse(null));
     }
 
     @Test
