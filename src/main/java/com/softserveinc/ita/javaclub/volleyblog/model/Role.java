@@ -1,5 +1,6 @@
 package com.softserveinc.ita.javaclub.volleyblog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,6 @@ public class Role {
     @JoinTable(name = "role_permissions",
     joinColumns = @JoinColumn(name = "role_id"),
     inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @JsonIgnore
     private List<Permission> permissions;
 }

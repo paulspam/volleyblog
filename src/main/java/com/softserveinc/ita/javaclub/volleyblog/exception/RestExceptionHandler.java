@@ -201,9 +201,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         log.info(ex.getClass().getName() + " handled");
 
-        String error = ex.getCause().toString();
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED,
-                ex.getLocalizedMessage(), error);
+//        String error = ex.getCause().toString();
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST,
+                ex.getLocalizedMessage(), ex.getLocalizedMessage());
 
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), apiError.getStatus(), request);
     }
