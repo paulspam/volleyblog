@@ -47,11 +47,12 @@ public class UserController {
         }
 
         User newUser = userService.save(user);
-        if (newUser != null) {
-            return ResponseEntity.ok(newUser);
-        } else {
-            return new ResponseEntity("User not saved", HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+//        if (newUser != null) {
+//            return ResponseEntity.ok(newUser);
+//        } else {
+//            return new ResponseEntity("User not saved", HttpStatus.UNPROCESSABLE_ENTITY);
+//        }
+        return ResponseEntity.ok(newUser);
     }
 
     @PutMapping()
@@ -66,13 +67,16 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable int id) throws RecordNotFoundException {
-        User user = userService.findById(id);
-        if (user == null) {
-            return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);
-        } else {
-            userService.deleteById(id);
-            return ResponseEntity.ok("User with ID = " + id + " was deleted");
-        }
+        userService.deleteById(id);
+        return ResponseEntity.ok("User with ID = " + id + " was deleted");
+
+//        User user = userService.findById(id);
+//        if (user == null) {
+//            return new ResponseEntity("No user with userId = " + id, HttpStatus.NOT_ACCEPTABLE);
+//        } else {
+//            userService.deleteById(id);
+//            return ResponseEntity.ok("User with ID = " + id + " was deleted");
+//        }
     }
 
     @GetMapping("/firstname/{firstName}")
