@@ -7,13 +7,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 import static com.softserveinc.ita.javaclub.volleyblog.security.constants.Permissions.MANAGE_USERS;
+import static com.softserveinc.ita.javaclub.volleyblog.security.constants.Permissions.READ_USER;
 
 public interface UserService {
 
+    @PreAuthorize(READ_USER)
     User findById(Integer id) throws RecordNotFoundException;
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    @PreAuthorize(MANAGE_USERS)
+    @PreAuthorize(MANAGE_USERS)
     List<User> findAll(Integer pageNo, Integer pageSize, String sortBy);
 
     @PreAuthorize(MANAGE_USERS)

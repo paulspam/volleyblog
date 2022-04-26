@@ -64,6 +64,15 @@ VALUES
 (1, 22),
 (1, 24);
 
+-- ADMIN additional permissions
+INSERT INTO role_permissions (role_id, permission_id)
+VALUES
+       (1, 7),
+       (1, 13),
+       (1, 15),
+       (1, 17),
+       (1, 23);
+
 -- USER Permissions
 INSERT INTO role_permissions (role_id, permission_id)
 VALUES

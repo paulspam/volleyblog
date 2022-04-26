@@ -89,7 +89,13 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+
+
+        <dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<scope>test</scope>
@@ -151,8 +157,18 @@
             <version>3.0.0</version>
         </dependency>
 
+		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
+		<!-- From A Guide to REST-assured-->
+		<!-- https://www.baeldung.com/rest-assured-tutorial-->
 
-    </dependencies>
+
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<plugins>
