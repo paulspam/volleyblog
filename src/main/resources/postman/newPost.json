@@ -1,0 +1,28 @@
+{
+  "title": "title4",
+  "content": "content4",
+  "createdDate": "",
+  "modifiedDate": "",
+  "user": {
+    "userId": 3,
+    "userName": "",
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "password": "",
+    "status": "ACTIVE",
+    "role": {
+      "roleId": 2,
+      "roleName": "ROLE_USER"
+    }
+  },
+  "postCategory": {
+    "categoryId": 3,
+    "categoryName": ""
+  },
+  "postStatus": {
+    "statusId": 1,
+    "statusName": "PUBLISHED"
+  },
+  "tags": []
+}

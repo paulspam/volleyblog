@@ -12,8 +12,32 @@ FROM posts;
 DELETE
 FROM posts;
 
+INSERT INTO post_statuses (status_name)
+VALUES
+      ('PUBLISHED'),
+      ('MODERATION'),
+      ('REJECTED');
+
+INSERT INTO post_categories (category_name)
+VALUES
+      ('Новини'),
+      ('Статті'),
+      ('Чемпіонат України'),
+      ('Чемпіонат Європи'),
+      ('Чемпіонат Світу'),
+      ('Команди');
+
 INSERT INTO posts (author_id, post_title, post_content, post_created_date, post_modified_date, post_category_id, post_status_id)
 VALUES (1, 'test1', 'content1', '2022-01-11', '2022-01-11',1,1);
+
+INSERT INTO post_likes (post_id, like_value, user_id)
+VALUES
+       (3, 1, 1),
+       (6, 1, 1),
+       (5, 1, 1),
+       (3, 1, 2),
+       (6, 1, 2),
+       (3, 1, 3);
 
 INSERT INTO roles (role_name)
 VALUES
@@ -159,6 +183,23 @@ VALUES
 ('доигровщик'),
 ('либеро');
 
+INSERT INTO teams (team_name, city, team_rating)
+VALUES
+       ('Локомотив', 'Харків', 50),
+       ('Барком-Кажани', 'Львів', 48),
+       ('Хімпром', 'Суми', 24),
+       ('Дніпро', 'Дніпрол', 20),
+       ('Юракадемія', 'Харків', 18);
+
+INSERT INTO players (user_id, nickname, team_id, amplua_id, player_rating)
+VALUES
+       (1, 'player1', 1, 1, 3),
+       (2, 'player2', 2, 2, 5),
+       (3, 'player3', 1, 4, 2),
+       (4, 'player4', 3, 1, 8),
+       (5, 'player5', 1, 2, 7),
+       (6, 'player1', 4, 1, 10);
+
 INSERT INTO tags (name)
 VALUES
 ('Україна'),
@@ -178,5 +219,7 @@ VALUES
 (13, 4),
 (13, 5),
 (13, 6);
+
+
 
 

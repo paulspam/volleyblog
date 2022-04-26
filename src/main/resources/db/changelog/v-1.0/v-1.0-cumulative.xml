@@ -6,5 +6,8 @@
 
 <!--    // сюда пишутся changeSets-->
     <include file="2022-03-27-test.xml" relativeToChangelogFile="true"/>
+    <include file="2022-04-26-posts-date-to-timestamp.xml" relativeToChangelogFile="true"/>
+    <include file="2022-04-26-comments-date-to-timestamp.xml" relativeToChangelogFile="true"/>
+    <include file="2022-04-26-likes-add-userid-field.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--    // сюда пишутся changeSets-->
+    <changeSet author="paulspam" id="posts-date-to-timestamp-changeset">
+        <!--        <tagDatabase tag="test"/>-->
+        <modifyDataType
+                columnName="post_created_date"
+                newDataType="timestamp"
+                tableName="posts"/>
+        <modifyDataType
+                columnName="post_modified_date"
+                newDataType="timestamp"
+                tableName="posts"/>
+    </changeSet>
+
+</databaseChangeLog>

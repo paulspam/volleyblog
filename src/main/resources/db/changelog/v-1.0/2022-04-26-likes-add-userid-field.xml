@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--    // сюда пишутся changeSets-->
+    <changeSet author="paulspam" id="likes-add-userid-field-changeset">
+        <!--        <tagDatabase tag="test"/>-->
+        <addColumn tableName="post_likes" >
+            <column afterColumn="like_id"
+                    name="user_id"
+                    type="integer">
+                <constraints nullable="false"
+                             foreignKeyName="users_fk"
+                             references="users(user_id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="comment_likes" >
+            <column afterColumn="like_id"
+                    name="user_id"
+                    type="integer">
+                <constraints nullable="false"
+                             foreignKeyName="users_fk"
+                             references="users(user_id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

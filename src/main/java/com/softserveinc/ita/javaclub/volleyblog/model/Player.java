@@ -16,6 +16,10 @@ public class Player {
     @Column(name = "player_id")
     private Integer playerId;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
     @Column(name = "nickname")
     private String nickname;
 

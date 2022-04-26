@@ -2,6 +2,8 @@ package com.softserveinc.ita.javaclub.volleyblog.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -26,10 +28,11 @@ public class Post {
     private String content;
 
     @Column(name = "post_created_date")
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
     @Column(name = "post_modified_date")
+    @UpdateTimestamp
     private LocalDateTime modifiedDate;
 
     @ManyToOne
