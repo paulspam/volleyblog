@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TopPlayersWithPosts {
+public class PlayersWithPostsDto {
     private Integer playerId;
     private Integer userId;
     private String nickName;

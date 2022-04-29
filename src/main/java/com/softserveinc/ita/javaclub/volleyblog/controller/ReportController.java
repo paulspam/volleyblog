@@ -1,8 +1,7 @@
 package com.softserveinc.ita.javaclub.volleyblog.controller;
 
-import com.softserveinc.ita.javaclub.volleyblog.dto.TopPlayersWithPosts;
+import com.softserveinc.ita.javaclub.volleyblog.dto.PlayersWithPostsDto;
 import com.softserveinc.ita.javaclub.volleyblog.service.ReportsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TopPlayersWithPosts>> getTopPlayersWithPosts() {
+    public ResponseEntity<List<PlayersWithPostsDto>> getTopPlayersWithPosts() {
         return ResponseEntity.ok(reportsService.getTop10PlayersWithPosts());
     }
 

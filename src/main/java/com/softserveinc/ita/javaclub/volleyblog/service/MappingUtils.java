@@ -1,6 +1,8 @@
 package com.softserveinc.ita.javaclub.volleyblog.service;
 
+import com.softserveinc.ita.javaclub.volleyblog.dto.PlayersWithPostsDto;
 import com.softserveinc.ita.javaclub.volleyblog.dto.PostDto;
+import com.softserveinc.ita.javaclub.volleyblog.model.Player;
 import com.softserveinc.ita.javaclub.volleyblog.model.Post;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,13 @@ public class MappingUtils {
         return postDto;
     }
 
+    public PlayersWithPostsDto mapToPlayersWithPostsDto(Player player) {
+        PlayersWithPostsDto playersWithPostsDto = new PlayersWithPostsDto();
+        playersWithPostsDto.setPlayerId(player.getPlayerId());
+        playersWithPostsDto.setUserId(player.getUser().getUserId());
+        playersWithPostsDto.setNickName(player.getNickname());
+        return playersWithPostsDto;
+    }
 }
 
 /*

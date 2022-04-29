@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ReportsServiceImpl implements ReportsService{
+public class ReportsServiceImpl_v2 implements ReportsService{
     private final UserRepository userRepository;
 
     private final PostRepository postRepository;
@@ -26,18 +26,14 @@ public class ReportsServiceImpl implements ReportsService{
 
     private final PlayerRepository playerRepository;
 
-    private final MappingUtils mappingUtils;
-
-    public ReportsServiceImpl(UserRepository userRepository,
-                              PostRepository postRepository,
-                              PostLikeRepository postLikeRepository,
-                              PlayerRepository playerRepository,
-                              MappingUtils mappingUtils) {
+    public ReportsServiceImpl_v2(UserRepository userRepository,
+                                 PostRepository postRepository,
+                                 PostLikeRepository postLikeRepository,
+                                 PlayerRepository playerRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.postLikeRepository = postLikeRepository;
         this.playerRepository = playerRepository;
-        this.mappingUtils = mappingUtils;
     }
 
     @Override
@@ -47,12 +43,16 @@ public class ReportsServiceImpl implements ReportsService{
         for (Player player : players) {
             List<Post> playerPosts = postRepository.findAllByUser(player.getUser());
             if (!playerPosts.isEmpty()) {
-                PlayersWithPostsDto playersWithPostsDto = mappingUtils.mapToPlayersWithPostsDto(player);
+                PlayersWithPostsDto playersWithPostsDto = new PlayersWithPostsDto();
+                playersWithPostsDto.setPlayerId(player.getPlayerId());
+                playersWithPostsDto.setUserId(player.getUser().getUserId());
+                playersWithPostsDto.setNickName(player.getNickname());
                 Integer allPostsRating = 0;
                 Short likeValue = 1;
                 for (Post post: playerPosts) {
-                    allPostsRating += postLikeRepository
+                    Integer postRating = postLikeRepository
                             .countAllByLikeValueAndPost(likeValue, post);
+                    allPostsRating += postRating;
                 }
                 playersWithPostsDto.setAllPostsRating(allPostsRating);
                 playersWithPostsDtoList.add(playersWithPostsDto);
@@ -60,7 +60,6 @@ public class ReportsServiceImpl implements ReportsService{
         }
         return playersWithPostsDtoList.stream()
                 .sorted((p1, p2) -> p2.getAllPostsRating().compareTo(p1.getAllPostsRating()))
-                .limit(2)
                 .collect(Collectors.toList());
     }
 
